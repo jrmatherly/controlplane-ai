@@ -1,0 +1,126 @@
+{
+  "project": "CodePilot",
+  "version": "0.50.1",
+  "generated": "2026-04-14",
+  "description": "Multi-model AI Agent desktop client (Electron + Next.js)",
+  "license": "BUSL-1.1",
+  "entryPoints": {
+    "electronMain": "electron/main.ts",
+    "nextjsRoot": "src/app/page.tsx",
+    "chatPage": "src/app/chat/page.tsx",
+    "apiLayer": "src/app/api/"
+  },
+  "stats": {
+    "totalTsFiles": 619,
+    "unitTests": 51,
+    "e2eSpecs": 9,
+    "apiRouteGroups": 25,
+    "pages": 13,
+    "dbTables": 12,
+    "themes": 12,
+    "reactHooks": 33,
+    "componentDirs": 16
+  },
+  "techStack": {
+    "desktop": "Electron 40",
+    "frontend": "Next.js 16 (App Router) + React 19",
+    "styling": "Tailwind CSS 4 + Radix UI",
+    "database": "better-sqlite3 (WAL)",
+    "ai": ["Claude Agent SDK", "@ai-sdk/anthropic", "@ai-sdk/openai", "@ai-sdk/google", "@ai-sdk/amazon-bedrock", "@ai-sdk/google-vertex"],
+    "im": ["Telegram Bot API", "Feishu SDK", "Discord.js"],
+    "testing": ["Playwright (E2E)", "tsx + node:test (unit)"],
+    "bundling": "electron-builder (DMG + NSIS)"
+  },
+  "coreModules": [
+    { "path": "src/lib/db.ts", "lines": 2840, "purpose": "SQLite schema, migrations, CRUD" },
+    { "path": "src/lib/claude-client.ts", "lines": 1800, "purpose": "Agent SDK wrapper, SSE streaming" },
+    { "path": "src/types/index.ts", "lines": 1229, "purpose": "All business types" },
+    { "path": "src/lib/stream-session-manager.ts", "purpose": "SSE stream lifecycle" },
+    { "path": "src/lib/provider-resolver.ts", "purpose": "Multi-provider model routing" },
+    { "path": "src/lib/agent-loop.ts", "purpose": "Agent execution loop" },
+    { "path": "src/lib/context-assembler.ts", "purpose": "Context window management" },
+    { "path": "src/lib/error-classifier.ts", "purpose": "16-class structured errors" },
+    { "path": "src/lib/provider-doctor.ts", "purpose": "Provider diagnostics (5 probes)" }
+  ],
+  "subsystems": {
+    "bridge": {
+      "path": "src/lib/bridge/",
+      "purpose": "IM integration (Telegram, Feishu)",
+      "components": ["channel-adapter", "channel-router", "conversation-engine", "delivery-layer", "permission-broker", "bridge-manager", "markdown/"]
+    },
+    "channels": {
+      "path": "src/lib/channels/",
+      "purpose": "Structured channel plugins (ChannelPlugin<T>)",
+      "plugins": ["feishu"]
+    },
+    "runtime": {
+      "path": "src/lib/runtime/",
+      "purpose": "Agent runtime abstraction (native CLI / SDK)",
+      "files": ["native-runtime.ts", "sdk-runtime.ts", "registry.ts", "event-bus.ts", "types.ts"]
+    },
+    "theme": {
+      "path": "src/lib/theme/",
+      "purpose": "Theme engine (12 themes)",
+      "files": ["loader.ts", "render-css.ts", "code-themes.ts", "context.ts", "types.ts"]
+    },
+    "tools": {
+      "corePath": "src/lib/tools/",
+      "builtinPath": "src/lib/builtin-tools/",
+      "coreTools": ["agent", "bash", "edit", "glob", "grep", "read", "write", "skill"],
+      "builtinTools": ["cli-tools", "dashboard", "media", "memory-search", "notification", "session-search", "widget-guidelines"]
+    }
+  },
+  "pages": [
+    { "route": "/", "file": "src/app/page.tsx" },
+    { "route": "/chat", "file": "src/app/chat/page.tsx" },
+    { "route": "/chat/[id]", "file": "src/app/chat/[id]/page.tsx" },
+    { "route": "/settings", "file": "src/app/settings/page.tsx" },
+    { "route": "/plugins", "file": "src/app/plugins/page.tsx" },
+    { "route": "/plugins/mcp", "file": "src/app/plugins/mcp/page.tsx" },
+    { "route": "/mcp", "file": "src/app/mcp/page.tsx" },
+    { "route": "/bridge", "file": "src/app/bridge/page.tsx" },
+    { "route": "/gallery", "file": "src/app/gallery/page.tsx" },
+    { "route": "/skills", "file": "src/app/skills/page.tsx" },
+    { "route": "/cli-tools", "file": "src/app/cli-tools/page.tsx" },
+    { "route": "/extensions", "file": "src/app/extensions/page.tsx" },
+    { "route": "/design-system", "file": "src/app/design-system/page.tsx" }
+  ],
+  "apiRouteGroups": [
+    "app", "bridge", "chat", "claude-auth", "claude-sessions", "claude-status",
+    "claude-upgrade", "cli-tools", "dashboard", "doctor", "files", "git", "health",
+    "media", "openai-oauth", "plugins", "providers", "sdk", "settings", "setup",
+    "skills", "tasks", "uploads", "usage", "workspace"
+  ],
+  "database": {
+    "engine": "better-sqlite3",
+    "mode": "WAL",
+    "dataDir": "~/.codepilot/",
+    "tables": [
+      "chat_sessions", "messages", "settings", "tasks", "api_providers",
+      "media_generations", "media_tags", "media_jobs", "media_job_items",
+      "media_context_events", "channel_bindings", "channel_offsets"
+    ]
+  },
+  "workspaces": {
+    "root": "controlplane-ai",
+    "apps": ["apps/site"],
+    "packages": []
+  },
+  "scripts": {
+    "dev": "next dev",
+    "electron:dev": "concurrently next dev + electron",
+    "test": "typecheck + unit tests",
+    "test:smoke": "playwright smoke tests",
+    "test:e2e": "full playwright e2e",
+    "electron:pack": "build + electron-builder"
+  },
+  "documentation": {
+    "architecture": "ARCHITECTURE.md",
+    "rules": "CLAUDE.md",
+    "execPlans": "docs/exec-plans/",
+    "handover": "docs/handover/",
+    "insights": "docs/insights/",
+    "research": "docs/research/",
+    "future": "docs/future/"
+  }
+}
