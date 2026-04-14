@@ -56,6 +56,7 @@ next-env.d.ts
 
 # local runtime artifacts
 .codepilot/
+.remember/
 
 # monorepo: site app build artifacts
 apps/site/.next/
